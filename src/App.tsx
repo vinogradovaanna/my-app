@@ -1,81 +1,76 @@
-import { TaskTemplate,TaskToolbar, ToolButtonList } from 'graphlabs.core.template';
+import {store, TaskTemplate, TaskToolbar, ToolButtonList} from 'graphlabs.core.template';
 import {GraphLoader} from "./GraphLoader";
-import { CommonGraphAdapter } from "graphlabs.core.template"
-import {IGraph, IVertex, IEdge, IsomorphismChecker} from "graphlabs.core.graphs";
+// import {Graph, Vertex, Edge} from "graphlabs.core.graphs";
 import {actionsCreators} from "graphlabs.core.template";
-import {store} from "graphlabs.core.template";
 import * as React from 'react';
-import { Adapter2 } from "./Adapter2";
+import { Adapter } from "./Adapter";
 import { TaskConsole } from "graphlabs.core.template";
 import { StudentMark } from "graphlabs.core.template";
 import {default as styled, StyledFunction } from 'styled-components';
-import {Component, HTMLProps, SFC} from 'react';
+import {HTMLProps} from 'react';
 
 interface Idiv {
     id: string;
 }
 const div: StyledFunction<Idiv & HTMLProps<HTMLDivElement> >= styled.div;
 
-
 export class App extends TaskTemplate {
 
-    isomorphism;
-    answer;
-    graph1;
-    graph2;
-    storeVertices;
+    private _isomorphism: boolean = false;
 
-    componentWillMount() {
-        var obj = GraphLoader.parseFromStr();
-        const graph1: IGraph<IVertex, IEdge> = GraphLoader.createGraph(obj , 0);
-        graph1.vertices.forEach(v => this.dispatch(actionsCreators.addVertex(v.name)));
-        graph1.edges.forEach(e => this.dispatch(actionsCreators.addEdge(e.vertexOne.name, e.vertexTwo.name)));
-
-        const graph2: IGraph<IVertex, IEdge> = GraphLoader.createGraph(obj , 1);
-        graph2.vertices.forEach(v => this.dispatch(actionsCreators.addVertex(v.name)));
-        graph2.edges.forEach(e => this.dispatch(actionsCreators.addEdge(e.vertexOne.name, e.vertexTwo.name)));
-
-        this.graph1=graph1;
-        this.graph2=graph2;
-        //this.setIsomorphism(GraphLoader.checkIsomorphism(graph1,graph2));
-
-    }
-
+    private answer: string = '';
+    // private graph1: Graph<Vertex, Edge>;
+    // private graph2: Graph<Vertex, Edge>;
+    private storeVertices: any[] = [];
 
     constructor(props: {}) {
         super(props);
         this.calculate = this.calculate.bind(this);
     }
 
-    setIsomorphism(res){
-        this.isomorphism = res;
+    componentWillMount() {
+        const graph = store.getState().graph;
+        var obj = GraphLoader.parseFromStr();
+        // const graph1: Graph<Vertex, Edge> = GraphLoader.createGraph(obj , 0);
+        // graph1.vertices.forEach(v => store.dispatch(actionsCreators.addVertex(v.name)));
+        // graph1.edges.forEach(e => store.dispatch(actionsCreators.addEdge(e.vertexOne.name, e.vertexTwo.name)));
+
+        // const graph2: Graph<Vertex, Edge> = GraphLoader.createGraph(obj , 1);
+        // graph2.vertices.forEach(v => store.dispatch(actionsCreators.addVertex(v.name)));
+        // graph2.edges.forEach(e => store.dispatch(actionsCreators.addEdge(e.vertexOne.name, e.vertexTwo.name)));
+
+        // this.graph1 = graph1;
+        // this.graph2 = graph2;
+        // this.setIsomorphism(GraphLoader.checkIsomorphism(graph1,graph2));
+
     }
 
-    getIsomorphism(){
-        return this.isomorphism;
+    public set isomorphism(res: boolean){
+        this._isomorphism = res;
+    }
+
+    public get isomorphism() {
+        return this._isomorphism;
     }
 
     calculate() {
-        if (this.getIsomorphism() == true & this.getAnswer() == "yes" || this.getIsomorphism() == false & this.getAnswer() == "no") return  true
-        else return false;
+        return this.isomorphism && this.getAnswer() == "yes"
+          || !this.isomorphism && this.getAnswer() == "no";
     }
 
-    setYes()
-    {
+    setYes() {
         this.answer = "yes";
         alert(this.storeVertices);
     }
 
-    setNo()
-    {
+    setNo() {
         this.answer = "no";
         alert("Эти пары: " + this.storeVertices);
     }
 
-    getAnswer(){
+    getAnswer() {
         return this.answer;
     }
-
 
     getTaskToolbar() {
         TaskToolbar.prototype.getButtonList = () => {
@@ -103,7 +98,7 @@ export class App extends TaskTemplate {
                      <p><input type="radio" name="answer" value="yes" onClick={this.setYes.bind(this)}/> Да</p>
                      <p><input type="radio" name="answer" value="no" onClick={this.setNo.bind(this)} /> Нет</p>
                      <p> Почему?</p>
-                     <p><textarea maxLength="120" cols="30" rows="3"/></p>
+                     <p><textarea maxLength={120} cols={30} rows={3} /></p>
 
                  </form>
         );
@@ -113,17 +108,17 @@ export class App extends TaskTemplate {
 
 
     render() {
-        var Task = this.task();
+        const Task = this.task();
         const Toolbar = this.getTaskToolbar();
         return (
             <App2 id="wrap">
-                {this.state.status
+                {super.state.status
                     ? <p>Задание выполнено. Ожидайте ответа от сервера...</p>
                     : (
                         <div>
                             <MainRow>
                                 <GraphCell>
-                                    <Adapter2/>
+                                    <Adapter />
                                 </GraphCell>
                                 <TaskCell>
                                     <p>Задание</p>
