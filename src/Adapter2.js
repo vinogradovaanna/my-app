@@ -1,8 +1,9 @@
-import {CommonGraphAdapter} from "graphlabs.core.template"
+import { CommonGraphAdapter} from "graphlabs.core.template"
 import * as React from 'react';
 import { select } from 'd3-selection';
 import * as d3 from 'd3';
-import {actionsCreatorsA} from "graphlabs.core.template";
+import {actionsCreators} from "graphlabs.core.template";
+
 
 
 export class Adapter2 extends CommonGraphAdapter{
@@ -226,14 +227,15 @@ export class Adapter2 extends CommonGraphAdapter{
                         .style('stroke', '#DB3E00');
                     if (item[0] == 'b') select(`#vertex_${item}`)
                         .style('stroke', '#1A237E');
-                    if (i % 2 == 1) this.dispatch(actionsCreatorsA.removeIntersection(arr[i], arr[i + 1]));
+                    if (i % 2 == 1) this.dispatch(actionsCreators.removeIntersection(arr[i], arr[i + 1]));
                 }
             });
 
         }
         if (output.length > this.storeVertices.length)
         {
-            this.dispatch(actionsCreatorsA.addIntersection(output[output.length - 2], output[output.length -1]));
+            alert(output[output.length -2]  +  output[output.length -1]);
+            this.dispatch(actionsCreators.addIntersection(output[output.length - 2], output[output.length -1]));
         }
 
         console.log(output.toString());

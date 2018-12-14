@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "graphlabs.core.template": "^0.1.30",
+    "graphlabs.core.template": "git+https://github.com/GraphLabsSuite/TaskCore.Template.git#ann",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
