@@ -2,10 +2,13 @@ import {CommonGraphAdapter} from "graphlabs.core.template"
 import * as React from 'react';
 import { select } from 'd3-selection';
 import * as d3 from 'd3';
-import {actionsCreatorsA} from "graphlabs.core.template";
+import {actionsCreators} from "graphlabs.core.template";
 
 
-export class Adapter2 extends CommonGraphAdapter{
+export class Adapter extends CommonGraphAdapter{
+
+    storeVertices = [];
+
     renderSvg() {
         this.graphVisualizer.width = this.ref.clientWidth;
         this.graphVisualizer.height = this.ref.clientHeight;
@@ -57,7 +60,7 @@ export class Adapter2 extends CommonGraphAdapter{
                     .call(d3.drag()
                         .on('start', startDrag)
                         .on('end',end.bind(this)))
-                //    .call(d3.drag().on('end', this.checkIntersection()))
+                    //    .call(d3.drag().on('end', this.checkIntersection()))
                     .on('click', this.clickVertex.bind(this));
                 select(this.ref)
                     .append('text')
@@ -111,7 +114,7 @@ export class Adapter2 extends CommonGraphAdapter{
         function startDrag() {
             const circle = d3.select(this).classed('dragging', true);
             d3.event.on('drag', dragged);
-            function dragged(d: any) {
+            function dragged(d) {
                 // if (d3.event.x < referrer.clientWidth - radius
                 //     && d3.event.x > radius && d3.event.y < referrer.clientHeight - radius && d3.event.y > radius) {
                 circle.raise().attr('cx', d3.event.x).attr('cy', d3.event.y);
@@ -121,7 +124,7 @@ export class Adapter2 extends CommonGraphAdapter{
                     .raise()
                     .attr('x', d3.event.x)
                     .attr('y', d3.event.y + +circle.attr('r') / 4);
-                d3.selectAll('line').each(function (l: any, li: any) {
+                d3.selectAll('line').each(function (l, li) {
                     if (`vertex_${d3.select(this).attr('out')}` === name) {
                         select(this)
                             .attr('x1', d3.event.x)
@@ -165,8 +168,6 @@ export class Adapter2 extends CommonGraphAdapter{
         }
     }
 
-   storeVertices = [];
-
     checkIntersection()
     {
         var checked=[];
@@ -192,10 +193,10 @@ export class Adapter2 extends CommonGraphAdapter{
                     checked.splice(checked.indexOf(vertex),1);
                     if(vertex.name[0] != i.name[0])
                     {
-                    select(`#vertex_${elem.label}`)
-                             .style('stroke', 'green');
-                    select(`#vertex_${vertex.name}`)
-                             .style('stroke', 'green');
+                        select(`#vertex_${elem.label}`)
+                            .style('stroke', 'green');
+                        select(`#vertex_${vertex.name}`)
+                            .style('stroke', 'green');
                     }
                     else
                     {
@@ -226,14 +227,14 @@ export class Adapter2 extends CommonGraphAdapter{
                         .style('stroke', '#DB3E00');
                     if (item[0] == 'b') select(`#vertex_${item}`)
                         .style('stroke', '#1A237E');
-                    if (i % 2 == 1) this.dispatch(actionsCreatorsA.removeIntersection(arr[i], arr[i + 1]));
+                    if (i % 2 == 1) this.dispatch(actionsCreators.removeIntersection(arr[i], arr[i + 1]));
                 }
             });
 
         }
         if (output.length > this.storeVertices.length)
         {
-            this.dispatch(actionsCreatorsA.addIntersection(output[output.length - 2], output[output.length -1]));
+            this.dispatch(actionsCreators.addIntersection(output[output.length - 2], output[output.length -1]));
         }
 
         console.log(output.toString());
