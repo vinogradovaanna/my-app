@@ -5,7 +5,7 @@ import {IGraph, IVertex, IEdge, IsomorphismChecker} from "graphlabs.core.graphs"
 import {actionsCreators} from "graphlabs.core.template";
 import {store} from "graphlabs.core.template";
 import * as React from 'react';
-import { Adapter2 } from "./Adapter2";
+import { Adapter } from "./Adapter";
 import { TaskConsole } from "graphlabs.core.template";
 import { StudentMark } from "graphlabs.core.template";
 import {default as styled, StyledFunction } from 'styled-components';
@@ -123,7 +123,7 @@ export class App extends TaskTemplate {
                         <div>
                             <MainRow>
                                 <GraphCell>
-                                    <Adapter2/>
+                                    <Adapter/>
                                 </GraphCell>
                                 <TaskCell>
                                     <p>Задание</p>
